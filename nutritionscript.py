@@ -1,10 +1,15 @@
 from inspect import classify_class_attrs
 from nutritionix import Nutritionix as nx
+
+import pyperclip
 import json
+
+inputString = "Pesto"
+
 
 nix = nx(app_id="9f95ec82", api_key="7454625f6dfe33c6fae45d24c81302be")
 
-inputId = "513fceb475b8dbbc21000f92"
+inputId = nix.search(inputString, results="0:1").json()["hits"][0]["_id"]
 
 
 #print(json.dumps(nix.search("apple").json(), indent=4))
@@ -12,18 +17,24 @@ inputId = "513fceb475b8dbbc21000f92"
 item = nix.item(id=inputId).json()
 
 
-tCals = item["nf_total_fat"]
-tCarbs = 0
-tUnsatFats = 0
-tSatFats = 0
-tTransFats = 0
-tFats = tUnsatFats + tSatFats + tTransFats
-tProtein = 0
-tSodium = 0
-tSugar = 0
-tFiber = 0
+tCals = str(item["nf_total_fat"])
+tCarbs = str(item["nf_total_carbohydrate"])
+try:
+    tUnsatFats = str(item["nf_polyunsaturated_fat"] + item["nf_monounsaturated_fat"])
+except:
+    tUnsatFats = str(0)
+tSatFats = str(item["nf_saturated_fat"])
+tTransFats = str(item["nf_trans_fatty_acid"])
+tFats = str(item["nf_total_fat"])
+tProtein = str(item["nf_protein"])
+tSodium = str(item["nf_sodium"])
+tSugar = str(item["nf_sugars"])
+tFiber = str(item["nf_dietary_fiber"])
+unitAmt = str(item["nf_serving_size_qty"])
+unitName = str(item["nf_serving_size_unit"])
 
-print(tCals)
+print("Pasted results for " + str(item["item_name"]))
+pyperclip.copy(unitAmt + "\t" + unitName + '\t' + "" + "\t" + tCals + "\t" + tCarbs + "\t" + tFats + "\t" + tUnsatFats + "\t" + tSatFats + "\t" + tTransFats+ "\t" + tProtein + "\t" + tSodium + "\t" + tSugar + "\t" + tFiber)
 #implement search function that finds the most likely id, then use that ID to collect everything needed like cals, etc.
 
 #use format (t is tab) calories/Tcarbs/Ttotalfat/Tunsatfat/Ttransfat/Tprotein/Tsodium/Tsugar/TFiber
