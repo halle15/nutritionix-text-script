@@ -4,12 +4,12 @@ from nutritionix import Nutritionix as nx
 import pyperclip
 import json
 
-inputString = "Pesto"
-
+inputString = "roast beef" #this is the search string 
+num = 1 #this is which item in the search results will be selected, probably should update this system, oh well.
 
 nix = nx(app_id="9f95ec82", api_key="7454625f6dfe33c6fae45d24c81302be")
 
-inputId = nix.search(inputString, results="0:1").json()["hits"][0]["_id"]
+inputId = nix.search(inputString, results=str(num)+":"+str(num+1)).json()["hits"][0]["_id"]
 
 
 #print(json.dumps(nix.search("apple").json(), indent=4))
